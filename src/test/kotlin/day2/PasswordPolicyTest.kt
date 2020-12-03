@@ -20,4 +20,19 @@ class PasswordPolicyTest {
             assertTrue(PasswordPolicy('c', 2, 9).meetsPolicy("ccccccccc"))
         }
     }
+    @Nested
+    inner class MeetsNewPolicy {
+        @Test
+        fun `Example 1`() {
+            assertTrue(PasswordPolicy('a', 1, 3).meetsNewPolicy("abcde"))
+        }
+        @Test
+        fun `Example 2`() {
+            assertFalse(PasswordPolicy('b', 1, 3).meetsNewPolicy("cdefg"))
+        }
+        @Test
+        fun `Example 3`() {
+            assertFalse(PasswordPolicy('c', 2, 9).meetsNewPolicy("ccccccccc"))
+        }
+    }
 }

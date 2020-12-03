@@ -16,4 +16,7 @@ fun main() {
 
     val part1 = lines.count { it.first.meetsPolicy(it.second) }
     println("Part1 = $part1")
+
+    val part2 = lines.count { it.first.meetsNewPolicy(it.second) }
+    println("Part2 = $part2")
 }
