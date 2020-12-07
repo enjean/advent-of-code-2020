@@ -2,10 +2,20 @@ package day4
 
 import java.io.File
 
-val requiredKeys = listOf("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid")
+val part1Validators = listOf(HasRequiredFieldsValidator)
+val part2Validators = listOf(
+    HasRequiredFieldsValidator,
+    ByrValidator,
+    IyrValidator,
+    EyrValidator,
+    HgtValidator,
+    HclValidator,
+    EclValidator,
+    PidValidator
+)
 
-fun countValid(input: List<String>): Int {
-    val passports = input.fold(PassportParseState()) { passportParseState, line ->
+fun parsePassports(input: List<String>): List<Map<String, String>> {
+    val resultState = input.fold(PassportParseState()) { passportParseState, line ->
         if (line.isEmpty()) {
             PassportParseState(
                 passportsSoFar = passportParseState.passportsSoFar + passportParseState.currentPassport,
@@ -21,12 +31,12 @@ fun countValid(input: List<String>): Int {
                 currentPassport = passportParseState.currentPassport.plus(newEntries)
             )
         }
-    }.passportsSoFar
-
-    return passports.count { passport ->
-        requiredKeys.all { passport.containsKey(it) }
     }
+    return resultState.passportsSoFar + resultState.currentPassport
 }
+
+fun countValid(passports: List<Map<String, String>>, validators: List<PassportValidator>) =
+    passports.count { passport -> validators.all { validator -> validator.validate(passport) } }
 
 data class PassportParseState(
     val passportsSoFar: List<Map<String, String>> = emptyList(),
@@ -35,5 +45,8 @@ data class PassportParseState(
 
 fun main() {
     val input = File("src/main/resources/day4/input.txt").readLines()
-    println("Part 1 = ${countValid(input)}")
+    val passports = parsePassports(input)
+    println("Part 1 = ${countValid(passports, part1Validators)}")
+
+    println("Part 2 = ${countValid(passports, part2Validators)}")
 }
