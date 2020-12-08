@@ -23,9 +23,22 @@ private tailrec fun findValue(instructions: String, min: Int, max: Int, lowerCha
     }
 }
 
-fun main() {
-    val seats = File("src/main/resources/day5/input.txt").readLines()
-        .map { toSeat(it) }
+fun missingSeat(seatIDs: List<Int>) : Int {
+    val sorted = seatIDs.sorted()
+    sorted.forEachIndexed { index, value ->
+        if (index != 0 && sorted[index - 1] != value - 1) {
+            return value - 1
+        }
+    }
+    throw RuntimeException("Didn't find")
+}
 
-    println("Part 1: ${seats.maxOf { it.seatID }}")
+fun main() {
+    val seatIDs = File("src/main/resources/day5/input.txt").readLines()
+        .map { toSeat(it).seatID }
+
+    val max = seatIDs.maxOrNull()!!
+    println("Part 1: $max")
+
+    println("Part 2: ${missingSeat(seatIDs)}")
 }
