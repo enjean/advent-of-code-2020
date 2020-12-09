@@ -1,0 +1,46 @@
+package day7
+
+import org.junit.jupiter.api.Test
+
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Nested
+
+class Day7KtTest {
+
+    @Nested
+    inner class ParseRule {
+        @Test
+        fun `Can hold 2 other`() {
+            val input = "light red bags contain 1 bright white bag, 2 muted yellow bags."
+            assertEquals(Pair("light red", setOf(Pair("bright white", 1), Pair("muted yellow", 2))), parseRule(input))
+        }
+
+        @Test
+        fun `Can hold 1 other`() {
+            val input = "bright white bags contain 1 shiny gold bag."
+            assertEquals(Pair("bright white", setOf(Pair("shiny gold", 1))), parseRule(input))
+        }
+
+        @Test
+        fun `Can hold none`() {
+            val input = "faded blue bags contain no other bags."
+            assertEquals(Pair("faded blue", emptySet<Pair<String, Int>>()), parseRule(input))
+        }
+    }
+
+    @Test
+    fun `Part 1 Example`() {
+        val input = listOf(
+            "light red bags contain 1 bright white bag, 2 muted yellow bags.",
+            "dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
+            "bright white bags contain 1 shiny gold bag.",
+            "muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
+            "shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
+            "dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
+            "vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
+            "faded blue bags contain no other bags.",
+            "dotted black bags contain no other bags."
+        )
+        assertEquals(4, bagsThatCanHold(input))
+    }
+}

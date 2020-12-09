@@ -1,6 +1,11 @@
 package util
 
+import java.io.File
+
 object ParseUtil {
+    fun inputLines(day: Int) =
+        File("src/main/resources/day$day/input.txt").readLines()
+
     fun parseGroups(lines: List<String>) : List<List<String>> =
         lines.fold(ParseGroupState()) { parseGroupState, line ->
             if(line.isEmpty()) {
