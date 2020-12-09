@@ -49,8 +49,22 @@ private fun ancestorsOf(bagParents: Map<String, Set<String>>, bag: String, ances
         }
     }
 
+fun numberOfBagsContained(bagRules: List<String>, bag: String) : Int {
+    val rules = bagRules.map { parseRule(it) }
+        .toMap()
+    return numberOfBagsContained(rules, bag)
+}
+
+private fun numberOfBagsContained(parsedBagRules: Map<String, Set<Pair<String, Int>>>, bag: String) : Int =
+    parsedBagRules[bag]?.let { bagsContained ->
+        bagsContained.sumOf {
+            it.second + it.second * numberOfBagsContained(parsedBagRules, it.first)
+        }
+    } ?: throw IllegalArgumentException("No rules for $bag")
+
 fun main() {
     val input = ParseUtil.inputLines(7)
 
     println("Part 1 = ${bagsThatCanHold(input)}")
+    println("Part 2 = ${numberOfBagsContained(input, "shiny gold")}")
 }
