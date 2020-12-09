@@ -12,19 +12,22 @@ class Day7KtTest {
         @Test
         fun `Can hold 2 other`() {
             val input = "light red bags contain 1 bright white bag, 2 muted yellow bags."
-            assertEquals(Pair("light red", setOf(Pair("bright white", 1), Pair("muted yellow", 2))), parseRule(input))
+            assertEquals(
+                BagRule("light red", setOf(BagItem("bright white", 1), BagItem("muted yellow", 2))),
+                parseRule(input)
+            )
         }
 
         @Test
         fun `Can hold 1 other`() {
             val input = "bright white bags contain 1 shiny gold bag."
-            assertEquals(Pair("bright white", setOf(Pair("shiny gold", 1))), parseRule(input))
+            assertEquals(BagRule("bright white", setOf(BagItem("shiny gold", 1))), parseRule(input))
         }
 
         @Test
         fun `Can hold none`() {
             val input = "faded blue bags contain no other bags."
-            assertEquals(Pair("faded blue", emptySet<Pair<String, Int>>()), parseRule(input))
+            assertEquals(BagRule("faded blue", emptySet<BagItem>()), parseRule(input))
         }
     }
 
@@ -42,7 +45,7 @@ class Day7KtTest {
 
     @Test
     fun `Part 1 Example`() {
-        assertEquals(4, bagsThatCanHold(example1Input))
+        assertEquals(4, bagsThatCanHold(example1Input, "shiny gold"))
     }
 
     @Nested
