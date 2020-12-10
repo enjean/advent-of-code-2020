@@ -19,8 +19,25 @@ private fun isNumberAtValid(input: List<Long>, index: Int, preambleSize: Int): B
     return false
 }
 
+fun findRangeAddingTo(input: List<Long>, value: Long): Pair<Long, Long> {
+    val maxIndexToConsider = input.indices.find { input[it] >= value } ?: input.size-1
+    for (i in 0 until maxIndexToConsider) {
+        for (setSize in 2 until maxIndexToConsider-i) {
+            val nums = input.subList(i, i + setSize)
+            if (nums.sum() == value) {
+                return Pair(nums.minOrNull()!!, nums.maxOrNull()!!)
+            }
+        }
+    }
+    throw IllegalArgumentException("No Match found")
+}
+
 fun main() {
     val input = ParseUtil.inputLines(9).map { it.toLong() }
 
-    println("Part 1 = ${findInvalid(input, 25)}")
+    val invalidValue = findInvalid(input, 25)
+    println("Part 1 = $invalidValue")
+
+    val part2 = findRangeAddingTo(input, invalidValue)
+    println("Part 2 = ${part2.first + part2.second}")
 }
