@@ -1,3 +1,5 @@
+package day9
+
 import util.ParseUtil
 
 fun findInvalid(input: List<Long>, preambleSize: Int): Long =
