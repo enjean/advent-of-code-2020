@@ -1,38 +1,19 @@
 package day12
 
-import kotlin.math.abs
+interface ShipState {
+    val shipCoordinate: Coordinate
 
-data class ShipState(
-    val northSouth: Int,
-    val eastWest: Int,
-    val direction: Direction
-) {
-    fun north(value: Int): ShipState =
-        copy(northSouth = northSouth - value)
+    fun north(value: Int): ShipState
 
-    fun south(value: Int): ShipState =
-        copy(northSouth = northSouth + value)
+    fun south(value: Int): ShipState
 
-    fun east(value: Int): ShipState =
-        copy(eastWest = eastWest + value)
+    fun east(value: Int): ShipState
 
-    fun west(value: Int): ShipState =
-        copy(eastWest = eastWest - value)
+    fun west(value: Int): ShipState
 
-    fun left(degrees: Int): ShipState =
-        copy(direction = direction.turnLeft(degrees))
+    fun left(degrees: Int): ShipState
 
-    fun right(degrees: Int): ShipState =
-        copy(direction = direction.turnRight(degrees))
+    fun right(degrees: Int): ShipState
 
-    fun forward(value: Int): ShipState =
-        when (direction) {
-            Direction.NORTH -> north(value)
-            Direction.SOUTH -> south(value)
-            Direction.EAST -> east(value)
-            Direction.WEST -> west(value)
-        }
-
-    val manhattanDistanceFromOrigin
-        get() = abs(northSouth) + abs(eastWest)
+    fun forward(value: Int): ShipState
 }
