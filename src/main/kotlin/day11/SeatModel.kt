@@ -3,6 +3,17 @@ package day11
 class SeatModel(
     private val seats: List<List<SeatState>>
 ) {
+    private val neighborDirections = listOf(
+        -1 to -1,
+        -1 to 0,
+        -1 to 1,
+        0 to -1,
+        0 to 1,
+        1 to -1,
+        1 to 0,
+        1 to 1
+    )
+
     val rowCount: Int
         get() = seats.size
 
@@ -12,21 +23,38 @@ class SeatModel(
     fun seatState(row: Int, col: Int): SeatState = seats[row][col]
 
     fun adjacentOccupiedSeats(row: Int, col: Int): Int =
-        adjacentSeats(row, col).count {
-            seatState(it.first, it.second) == SeatState.TAKEN
-        }
+        occupiedSeats(row, col, ::adjacentSeatInDirection)
 
-    private fun adjacentSeats(row: Int, col: Int): Set<Pair<Int, Int>> =
-        (row - 1..row + 1).flatMap { r ->
-            (col - 1..col + 1).map { c ->
-                r to c
-            }
-        }.filter { it.first >= 0 }
-            .filter { it.second >= 0 }
-            .filter { it.first < rowCount }
-            .filter { it.second < colCount }
-            .filterNot { it.first == row && it.second == col }
-            .toSet()
+    fun visibleOccupiedSeats(row: Int, col: Int): Int =
+        occupiedSeats(row, col, ::firstVisibleSeatInDirection)
+
+    private fun occupiedSeats(row: Int, col: Int, seatFinder: (Int, Int, Pair<Int, Int>) -> SeatState?) =
+        neighborDirections
+            .mapNotNull { seatFinder(row, col, it) }
+            .count { it == SeatState.TAKEN }
+
+    private fun adjacentSeatInDirection(row: Int, col: Int, direction: Pair<Int, Int>): SeatState? {
+        val targetRow = row + direction.first
+        val targetCol = col + direction.second
+        return if (isValidSeat(targetRow, targetCol)) seatState(targetRow, targetCol) else null
+    }
+
+    private tailrec fun firstVisibleSeatInDirection(row: Int, col: Int, direction: Pair<Int, Int>): SeatState? {
+        val targetRow = row + direction.first
+        val targetCol = col + direction.second
+        if (!isValidSeat(targetRow, targetCol)) {
+            return null
+        }
+        val targetSeatState = seatState(targetRow, targetCol)
+        return if (targetSeatState == SeatState.FLOOR) {
+            firstVisibleSeatInDirection(targetRow, targetCol, direction)
+        } else {
+            targetSeatState
+        }
+    }
+
+    private fun isValidSeat(row: Int, col: Int) =
+        row in 0 until rowCount && col in 0 until colCount
 
     fun numOccupied(): Int =
         seats.sumBy { row ->
