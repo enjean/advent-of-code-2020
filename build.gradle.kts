@@ -14,6 +14,7 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.7.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.hamcrest:hamcrest-library:2.1")
 }
 
 tasks.test {
