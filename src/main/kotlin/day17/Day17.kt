@@ -2,11 +2,12 @@ package day17
 
 import util.ParseUtil
 
-fun parseModel(input: List<String>) : Set<Coordinate> =
+fun parseModel(input: List<String>, dimensions: Int) : Set<Coordinate> =
     input.foldIndexed(emptySet()) { row, acc, line ->
         line.foldIndexed(acc) { col, innerAcc, character ->
             if (character == '#') {
-                innerAcc + Coordinate(x = col, y = row, z = 0)
+                val parts = listOf(col, row) + List(dimensions - 2) { 0 }
+                innerAcc + Coordinate(parts)
             } else {
                 innerAcc
             }
@@ -40,9 +41,11 @@ fun runSimulation(activeCells: Set<Coordinate>, cycles: Int): Set<Coordinate> =
     }
 
 fun main() {
-    val initialState = parseModel(ParseUtil.inputLines(17))
-
-    val part1Result = runSimulation(initialState, 6)
-
+    val initialState3D = parseModel(ParseUtil.inputLines(17), 3)
+    val part1Result = runSimulation(initialState3D, 6)
     println("Part 1 = ${part1Result.size}")
+
+    val initialState4D = parseModel(ParseUtil.inputLines(17), 4)
+    val part2Result = runSimulation(initialState4D, 6)
+    println("Part 2 = ${part2Result.size}")
 }

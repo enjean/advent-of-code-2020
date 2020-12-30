@@ -1,22 +1,29 @@
 package day17
 
 data class Coordinate(
-    val x: Int,
-    val y: Int,
-    val z: Int
+    val values: List<Int>
 ) {
     val neighbors: Set<Coordinate>
         get() =
-            (-1..1).flatMap { dx ->
-                (-1..1).flatMap { dy ->
-                    (-1..1).mapNotNull { dz ->
-                        if (dx == 0 && dy == 0 && dz == 0) {
-                            null
-                        } else {
-                            Coordinate(x = x + dx, y = y + dy, z = z + dz)
-                        }
-                    }
-                }
+            deltas().map { deltaList ->
+                Coordinate(deltaList.mapIndexed { index, delta -> values[index] + delta })
             }.toSet()
 
+    private fun deltas() =
+        deltas(values.size).filterNot { it.all { delta -> delta == 0 } }
+
+    private fun deltas(dimension: Int) : List<List<Int>> =
+        if(dimension == 0) {
+            listOf(
+                emptyList()
+            )
+        } else {
+            deltas(dimension - 1).flatMap { lowerDelta ->
+                listOf(
+                    lowerDelta + -1,
+                    lowerDelta + 0,
+                    lowerDelta + 1
+                )
+            }
+        }
 }
